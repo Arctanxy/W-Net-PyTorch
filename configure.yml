@@ -1,0 +1,43 @@
+
+# 网络参数
+M: 5
+
+# loss相关参数<参考论文>
+alpha: 3
+alpha_GP: 10
+beta_d: 1
+beta_p: 0.2
+beta_r: 0.2
+lambda_l1: 50
+lambda_phi: 75
+phi_p: 3
+phi_r: 5
+
+
+# 优化器参数
+beta_1: 0.5
+beta_2: 0.999
+init_lr: 0.001
+weight_decay: 0.001
+
+# 训练参数
+num_epochs: 1000
+start_epoch: 0
+save_epoch: 10
+batch_size: 8
+num_workers: 4
+multi_gpus: OFF
+device_ids: [0, 1]
+device_id: 0
+ckpt: NULL
+preload: ON # 把图片预加载到内存，提高速度
+img_folder: data # 图片暂存目录，提高图片加载速度
+
+# 实验参数
+num_fonts: 5 # 训练集中使用的字体数量
+num_chars: 8 # 训练集中使用的汉字数量
+num_samples: 185500
+reconstruction_loss_type: l1 # 重建损失，尝试l1loss和diceloss
+title: 53fonts_3500chars_l1 # 实验名称
+# tricks
+label_smoothing: ON

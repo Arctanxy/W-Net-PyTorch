@@ -1,0 +1,152 @@
+from torch import nn
+import torch
+import torch.nn.functional as F
+from src.config import conf
+
+
+class DiceLoss(nn.Module):
+    def __init__(self):
+        super(DiceLoss, self).__init__()
+
+    def forward(self, x_fake, x_real):
+        N = x_real.size(0)
+        smooth = 1
+
+        input_flat = x_fake.view(N, -1)
+        target_flat = x_real.view(N, -1)
+
+        intersection = input_flat * target_flat
+        loss = (
+            2
+            * (intersection.sum(1) + smooth)
+            / (input_flat.sum(1) + target_flat.sum(1) + smooth)
+        )
+        loss = 1 - loss.sum() / N
+        return loss
+
+
+class GenerationLoss(nn.Module):
+    def __init__(self):
+        super(GenerationLoss, self).__init__()
+
+    def forward(
+        self,
+        out,
+        out_real,
+        real_label,
+        real_style_label,
+        char_label,
+        x_fake,
+        x_real,
+        encoder_out_real_left,
+        encoder_out_fake_left,
+        encoder_out_real_right,
+        encoder_out_fake_right,
+        cls_enc_p=None,
+        cls_enc_s=None,
+    ):
+        self.real_fake_loss = conf.alpha * nn.BCELoss()(
+            out[0], real_label.float()
+        )
+        self.style_category_loss = conf.beta_d * nn.CrossEntropyLoss()(
+            out[1], real_style_label
+        )
+        self.char_category_loss = conf.beta_d * nn.CrossEntropyLoss()(
+            out[2], char_label
+        )
+
+        if conf.reconstruction_loss_type == "dice":
+            self.reconstruction_loss = conf.lambda_l1 * DiceLoss()(
+                x_fake, x_real
+            )
+        elif conf.reconstruction_loss_type == "l1":
+            self.reconstruction_loss = conf.lambda_l1 * nn.L1Loss()(
+                x_fake, x_real
+            )
+
+        # 原论文里面使用训练好的vgg字符分类网络的中间特征来做
+        # 这里为了省事，直接用的Discriminator的中间层特征
+        self.reconstruction_loss2 = conf.lambda_phi * (
+            nn.MSELoss()(out[3][0], out_real[3][0])
+            + nn.MSELoss()(out[3][1], out_real[3][1])
+            + nn.MSELoss()(out[3][2], out_real[3][2])
+            + nn.MSELoss()(out[3][3], out_real[3][3])
+        )
+
+        self.left_constant_loss = conf.phi_p * nn.MSELoss()(
+            encoder_out_real_left, encoder_out_fake_left
+        )
+        self.right_constant_loss = conf.phi_r * nn.MSELoss()(
+            encoder_out_real_right, encoder_out_fake_right
+        )
+        self.content_category_loss = conf.beta_p * nn.CrossEntropyLoss()(
+            cls_enc_p, char_label
+        )  # category loss for content prototype encoder
+        self.style_category_loss = conf.beta_r * nn.CrossEntropyLoss()(
+            cls_enc_s, real_style_label
+        )
+        return (
+            self.real_fake_loss
+            + self.style_category_loss
+            + self.char_category_loss
+            + self.reconstruction_loss
+            + self.reconstruction_loss2
+            + self.left_constant_loss
+            + self.right_constant_loss
+            + self.content_category_loss
+            + self.style_category_loss
+        )
+
+
+class DiscriminationLoss(nn.Module):
+    def __init__(self):
+        super(DiscriminationLoss, self).__init__()
+
+    def forward(
+        self,
+        out_real,
+        out_fake,
+        real_label,
+        fake_label,
+        real_style_label,
+        fake_style_label,
+        char_label,
+        fake_char_label,
+        cls_enc_p=None,
+        cls_enc_s=None,
+    ):
+        self.real_loss = conf.alpha * nn.BCELoss()(
+            out_real[0], real_label.float()
+        )  # fake or real loss
+        self.fake_loss = conf.alpha * nn.BCELoss()(
+            out_fake[0], fake_label.float()
+        )  # fake or real loss
+        self.real_style_loss = conf.beta_d * nn.CrossEntropyLoss()(
+            out_real[1], real_style_label
+        )  # style category loss
+        self.fake_style_loss = conf.beta_d * nn.CrossEntropyLoss()(
+            out_fake[1], fake_style_label
+        )  # style category loss
+        self.real_char_category_loss = conf.beta_d * nn.CrossEntropyLoss()(
+            out_real[2], char_label
+        )  # char category loss
+        self.fake_char_category_loss = conf.beta_d * nn.CrossEntropyLoss()(
+            out_fake[2], fake_char_label
+        )  # char category loss
+        self.content_category_loss = conf.beta_p * nn.CrossEntropyLoss()(
+            cls_enc_p, char_label
+        )
+        self.style_category_loss = conf.beta_r * nn.CrossEntropyLoss()(
+            cls_enc_s, real_style_label
+        )
+
+        return 0.5 * (
+            self.real_loss
+            + self.fake_loss
+            + self.real_style_loss
+            + self.fake_style_loss
+            + self.real_char_category_loss
+            + self.fake_char_category_loss
+            + self.content_category_loss
+            + self.style_category_loss
+        )
