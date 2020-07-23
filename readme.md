@@ -17,7 +17,6 @@ TODO:
 - [ ] 在G的训练和测试阶段都添加dropout
 - [ ] 使用LeaklyReLU替代ReLU
 - [ ] 在Discriminator中使用LayerNorm
-- [ ] 标签翻转
 - [ ] 每个batch中使用同一种字体（据说可以使训练变得更简单）
 - [ ] 监控训练中的梯度变化
 - [ ] 添加梯度惩罚
