@@ -13,7 +13,7 @@
 TODO:
 ---
 
-- [ ] label smoothing
+- [x] label smoothing
 - [ ] 在G的训练和测试阶段都添加dropout
 - [ ] 使用LeaklyReLU替代ReLU
 - [ ] 在Discriminator中使用LayerNorm

@@ -24,7 +24,7 @@ weight_decay: 0.001
 num_epochs: 1000
 start_epoch: 0
 save_epoch: 10
-batch_size: 8
+batch_size: 8 # 2 for debugging, 128 for training
 num_workers: 4
 multi_gpus: OFF
 device_ids: [0, 1]
