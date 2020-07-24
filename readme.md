@@ -11,18 +11,18 @@
 
 现阶段的训练结果：
 
-原始字体（黑体加粗）
+原始字体（黑体加粗）protype
 ---
 ![](./img/src.png)
 
-目标字体（一个batch里面混合了多种字体）
+目标字体（一个batch里面混合了多种字体）real
 ---
 ![](./img/target.png)
 
-
-生成字体 
+生成字体 fake
 ---
 ![](./img/out.png)
+
 
 与原论文的差别
 ---
@@ -33,6 +33,8 @@
 
 TODO:
 ---
+
+tricks:
 
 - [x] label smoothing
 - [ ] 在G的训练和测试阶段都添加dropout
