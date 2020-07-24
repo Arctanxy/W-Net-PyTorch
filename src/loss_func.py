@@ -57,7 +57,7 @@ def calc_gradient_penalty(D, x_real, x_fake, x1, x2):
     x_fake.requires_grad = True 
     x1.requires_grad = True 
     x2.requires_grad = True 
-    alpha = torch.rand(conf.batch_size, 1)
+    alpha = torch.rand(conf.batch_size, 1, 1, 1)
     alpha = alpha.expand(x_real.size())
     alpha = alpha.to(conf.device)
 
