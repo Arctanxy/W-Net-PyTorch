@@ -104,18 +104,35 @@ class Trainer(object):
             cls_enc_s = self.CLSS(rout.view(-1, 512).detach())
 
             # 真假分类损失，风格分类损失，两个encoder提取到的特征质量损失
-            L_D = DiscriminationLoss()(
-                out_real,
-                out_fake,
-                real_label,
-                fake_label,
-                real_style_label,
-                fake_style_label,
-                char_label,
-                fake_char_label,
-                cls_enc_p,
-                cls_enc_s,
-            )
+            if conf.label_smoothing: 
+                L_D = DiscriminationLoss()(
+                    out_real,
+                    out_fake,
+                    real_label,
+                    fake_label,
+                    real_style_label,
+                    fake_style_label,
+                    char_label,
+                    fake_char_label,
+                    cls_enc_p,
+                    cls_enc_s,
+                    self.D,
+                    x_real,
+                    x_fake.detach(),x1,x2
+                )
+            else:
+                L_D = DiscriminationLoss()(
+                    out_real,
+                    out_fake,
+                    real_label,
+                    fake_label,
+                    real_style_label,
+                    fake_style_label,
+                    char_label,
+                    fake_char_label,
+                    cls_enc_p,
+                    cls_enc_s,
+                )
             epoch_lds += L_D.item()
             L_D.backward()
             self.optimizer_D.step()

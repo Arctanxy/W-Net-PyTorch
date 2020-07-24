@@ -2,6 +2,12 @@
 
 原论文：[W-Net: One-Shot Arbitrary-Style Chinese Character Generation with Deep Neural Networks](https://www.researchgate.net/publication/329007858_W-Net_One-Shot_Arbitrary-Style_Chinese_Character_Generation_with_Deep_Neural_Networks_25th_International_Conference_ICONIP_2018_Siem_Reap_Cambodia_December_13-16_2018_Proceedings_Part_V)
 
+算法思路简介：
+1. 图中左侧的分支用于提取汉字结构信息
+2. 图中右侧的分支用于提取字体风格信息 
+3. 字体风格特征只选用了较深层网络得到的特征图
+4. 采用对抗训练的方式得到与真实汉字相近的图片 
+
 
 与原论文的差别
 ---
@@ -19,5 +25,5 @@ TODO:
 - [ ] 在Discriminator中使用LayerNorm
 - [ ] 每个batch中使用同一种字体（据说可以使训练变得更简单）
 - [ ] 监控训练中的梯度变化
-- [ ] 添加梯度惩罚
+- [x] 添加梯度惩罚
 - [ ] 历史均值
