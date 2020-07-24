@@ -1,0 +1,3 @@
+target_font_file: ./fonts/val_fonts/ZhuLangYingXingTi-2.otf
+style_words: 16 # 推理时使用的风格字数量 
+target_word: "戴"
