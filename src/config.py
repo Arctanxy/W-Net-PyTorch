@@ -31,3 +31,4 @@ class Config:
 
 p = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 conf = Config(os.path.join(p, "configure.yml"))
+infer_conf = Config(os.path.join(p, "inference_configure.yml"))

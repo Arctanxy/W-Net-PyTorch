@@ -1,6 +1,21 @@
 # 基于Wnet的字体生成
 
-原论文：[W-Net: One-Shot Arbitrary-Style Chinese Character Generation with Deep Neural Networks](https://www.researchgate.net/publication/329007858_W-Net_One-Shot_Arbitrary-Style_Chinese_Character_Generation_with_Deep_Neural_Networks_25th_International_Conference_ICONIP_2018_Siem_Reap_Cambodia_December_13-16_2018_Proceedings_Part_V)
+最近受到b站一个视频<sup>[1]</sup>的启发，想做一套属于自己的字体，但是又不想写好几千个字，为了偷个懒，调研了一下用神经网络合成字体的算法，最终找到一篇名为W-Net的论文：
+
+[W-Net: One-Shot Arbitrary-Style Chinese Character Generation with Deep Neural Networks](https://www.researchgate.net/publication/329007858_W-Net_One-Shot_Arbitrary-Style_Chinese_Character_Generation_with_Deep_Neural_Networks_25th_International_Conference_ICONIP_2018_Siem_Reap_Cambodia_December_13-16_2018_Proceedings_Part_V)
+
+下面介绍一下这篇论文的主要内容：
+
+首先是相关算法的介绍：
+---
+
+
+
+
+然后是模型结构：
+---
+
+![](./img/struct.jpg)
 
 算法思路简介：
 1. 图中左侧的分支用于提取汉字结构信息
@@ -8,6 +23,8 @@
 3. 字体风格特征只选用了较深层网络得到的特征图
 4. 采用对抗训练的方式得到与真实汉字相近的图片 
 
+最后是loss函数设计
+---
 
 现阶段的训练结果：
 
