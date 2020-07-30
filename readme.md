@@ -1,8 +1,5 @@
 # 基于Wnet的字体生成
 
-
-
-
 现阶段的训练结果：
 
 原始字体（黑体加粗）protype
@@ -32,10 +29,10 @@ TODO:
 - [x] label smoothing
 - [ ] 在G的训练和测试阶段都添加dropout
 - [ ] 使用LeaklyReLU替代ReLU
+- [ ] Generator的最后一层使用Tanh激活
 - [ ] 在Discriminator中使用LayerNorm
 - [ ] 每个batch中使用同一种字体（据说可以使训练变得更简单）
 - [ ] 监控训练中的梯度变化
 - [x] 添加梯度惩罚
 - [ ] 历史均值
 - [ ] 模型推理代码
-- [ ] 常数loss与重建loss2的最后一个特征重复，需要去掉
