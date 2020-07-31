@@ -11,7 +11,10 @@ import random
 from sklearn.model_selection import train_test_split
 from torchvision import transforms
 
-from src.config import conf
+try:
+    from src.config import conf
+except:
+    from config import conf
 
 
 def generate_img(word, font_file, font_size, w=80):
@@ -20,8 +23,8 @@ def generate_img(word, font_file, font_size, w=80):
         conf.img_folder,
         "{}_{}.jpg".format(word, osp.basename(font_file).split(".")[0]),
     )
-    if not osp.exists(conf.img_folder):
-        os.mkdir(conf.img_folder)
+    if not osp.exists(osp.join(conf.folder, conf.img_folder)):
+        os.mkdir(osp.join(conf.folder, conf.img_folder))
     # print(file_name)
     # print(word, font_file)
     if osp.exists(file_name):

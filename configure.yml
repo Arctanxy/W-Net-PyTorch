@@ -24,7 +24,7 @@ weight_decay: 0.001
 num_epochs: 1000
 start_epoch: 0
 save_epoch: 10
-batch_size: 1 # 2 for debugging, 128 for training
+batch_size: 2 # 2 for debugging, 128 for training
 num_workers: 4
 multi_gpus: OFF
 device_ids: [0, 1]
@@ -34,10 +34,11 @@ preload: ON # 把图片预加载到内存，提高速度
 img_folder: data # 图片暂存目录，提高图片加载速度
 
 # 实验参数
-num_fonts: 5 # 训练集中使用的字体数量
-num_chars: 8 # 训练集中使用的汉字数量
+num_fonts: 10 # 训练集中使用的字体数量
+num_chars: 26 # 训练集中使用的汉字数量
 num_samples: 185500
 reconstruction_loss_type: l1 # 重建损失，尝试l1loss和diceloss
 title: 53fonts_3500chars_l1 # 实验名称
 # tricks
 label_smoothing: ON
+custom_batch: ON  # 自定义batch， 风格分支中每个batch的风格相同
