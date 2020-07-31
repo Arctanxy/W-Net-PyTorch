@@ -1,5 +1,17 @@
 # 基于Wnet的字体生成
 
+训练：
+
+```
+python main.py
+```
+
+图例：
+
+```
+python main.py inference
+```
+
 现阶段的训练结果：
 
 原始字体（黑体加粗）protype
