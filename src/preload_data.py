@@ -143,7 +143,7 @@ class CustomSampler(Sampler):
 
     def __iter__(self):
         indices = []
-        font_indices = [i for i in range(len(self.fonts))]
+        font_indices = [i for i in range(len(self.data.fonts))]
         if self.shuffle:
             random.shuffle(font_indices)
         # for n in range(conf.num_fonts):
