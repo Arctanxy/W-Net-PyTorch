@@ -36,20 +36,20 @@ class Trainer(object):
             x_real = real_img.to(conf.device)
             real_style_label = style_indices.to(conf.device)  # 真实的风格标签
             fake_style_label = torch.tensor(
-                [conf.num_fonts for i in range(conf.batch_size)]
+                [conf.num_fonts for i in range(x1.shape[0])] # drop_last = True的时候可以把用range(conf.batch_size)
             ).to(
                 conf.device
             )  # 假的风格标签
             char_label = index.to(conf.device)  # 真实的字形标签
             fake_char_label = torch.tensor(
-                [conf.num_chars for i in range(conf.batch_size)]
+                [conf.num_chars for i in range(x1.shape[0])]
             ).to(
                 conf.device
             )  # 假的字形标签
-            real_label = torch.tensor([1 for i in range(conf.batch_size)]).to(
+            real_label = torch.tensor([1 for i in range(x1.shape[0])]).to(
                 conf.device
             )  # 真样本标签
-            fake_label = torch.tensor([0 for i in range(conf.batch_size)]).to(
+            fake_label = torch.tensor([0 for i in range(x1.shape[0])]).to(
                 conf.device
             )  # 假样本标签
 
