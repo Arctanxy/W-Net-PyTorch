@@ -35,8 +35,8 @@ TODO:
 - [ ] 使用LeaklyReLU替代ReLU
 - [ ] Generator的最后一层使用Tanh激活
 - [ ] 在Discriminator中使用LayerNorm
-- [ ] 每个batch中使用同一种字体（据说可以使训练变得更简单）
+- [x] 每个batch中使用同一种字体（据说可以使训练变得更简单）
 - [ ] 监控训练中的梯度变化
 - [x] 添加梯度惩罚
 - [ ] 历史均值
-- [ ] 模型推理代码
+- [x] 模型推理代码
