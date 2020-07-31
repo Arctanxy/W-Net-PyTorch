@@ -3,7 +3,7 @@
 
 # 预加载数据到内存中，提高训练速度
 from torchvision import transforms
-from torch.utils.data import Dataset, Sampler
+from torch.utils.data import Dataset, Sampler, DataLoader
 from glob import glob
 from tqdm import tqdm
 import os.path as osp
@@ -194,19 +194,30 @@ class CustomBatchSampler:
 
 
 if __name__ == "__main__":
-    d = PreLoadData()
-    cnt = 0
-    print("len ", len(d))
-    for (
-        protype_img,
-        char_index,
-        style_img,
-        font_index,
-        style_char_index,
-        real_img,
-    ) in d:
-        print(font_index, " ", d.style_label[cnt])
-        # print(font_index)
-        cnt += 1
-        if cnt == len(d) - 1:
-            break
+    # d = PreLoadData()
+    # cnt = 0
+    # print("len ", len(d))
+    # for (
+    #     protype_img,
+    #     char_index,
+    #     style_img,
+    #     font_index,
+    #     style_char_index,
+    #     real_img,
+    # ) in d:
+    #     print(font_index, " ", d.style_label[cnt])
+    #     # print(font_index)
+    #     cnt += 1
+    #     if cnt == len(d) - 1:
+    #         break
+
+    train_data = PreLoadData()
+    train_sampler = CustomSampler(train_data, shuffle=True)
+    train_batch_sampler = CustomBatchSampler(
+        train_sampler, conf.batch_size, drop_last=False
+    )
+    train_dl = DataLoader(train_data, batch_sampler=train_batch_sampler)
+    from tqdm import tqdm
+
+    for i in tqdm(train_dl, total=len(train_dl)):
+        pass
