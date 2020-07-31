@@ -1,9 +1,15 @@
 # train + validation | inference
+import torch
 import sys
 import os
+import os.path as osp
+from torchvision import transforms
+import matplotlib.pyplot as plt
 from src.config import conf, infer_conf
 from src.trainer import Trainer
 from src.data import generate_img
+from src.model import WNet
+
 
 if conf.preload:
     from src.preload_data import PreLoadData as CHNData
@@ -84,7 +90,9 @@ if __name__ == "__main__":
 
         src_tensor = totensor(src_img).unsqueeze(0)
         target_tensor = totensor(target_img).unsqueeze(0)
-
+        wnet = WNet()
+        weights = torch.load(ckpt, map_location="cpu")
+        wnet.load_state_dict(weights["G"])
         out = wnet(src_tensor, target_tensor)
         out_tensor = out[0]
 
