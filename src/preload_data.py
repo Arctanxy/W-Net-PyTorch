@@ -40,7 +40,8 @@ class PreLoadData(Dataset):
             + glob(osp.join(font_folder, "*.otf"))
         )
         self.fonts = sorted(self.fonts)  # 排序以便编号
-        self.fonts = self.fonts[: conf.num_fonts]  # 调试模型的时候只用一部分
+        if subset == "train":
+            self.fonts = self.fonts[: conf.num_fonts]  # 调试模型的时候只用一部分
         self.font_size = font_size
         characters = pd.read_excel(osp.join(conf.folder, "res", "3500常用汉字.xls"))
         self.characters = list(characters["hz"].values)
@@ -101,7 +102,7 @@ class PreLoadData(Dataset):
                     operator.add,
                     [
                         [j for i in range(conf.num_chars)]
-                        for j in range(conf.num_fonts)
+                        for j in range(len(self.fonts))
                     ],
                 )
             )
@@ -132,7 +133,7 @@ class PreLoadData(Dataset):
         )
 
     def __len__(self):
-        return conf.num_fonts * conf.num_chars - 1
+        return len(self.fonts) * conf.num_chars - 1
 
 
 class CustomSampler(Sampler):
@@ -142,7 +143,7 @@ class CustomSampler(Sampler):
 
     def __iter__(self):
         indices = []
-        font_indices = [i for i in range(conf.num_fonts)]
+        font_indices = [i for i in range(len(self.fonts))]
         if self.shuffle:
             random.shuffle(font_indices)
         # for n in range(conf.num_fonts):
