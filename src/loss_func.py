@@ -9,6 +9,7 @@ class LabelSmoothing(nn.Module):
     """
     NLL loss with label smoothing.
     """
+
     def __init__(self, smoothing=0.1):
         """
         Constructor for the LabelSmoothing module.
@@ -26,6 +27,7 @@ class LabelSmoothing(nn.Module):
         smooth_loss = -logprobs.mean(dim=-1)
         loss = self.confidence * nll_loss + self.smoothing * smooth_loss
         return loss.mean()
+
 
 class DiceLoss(nn.Module):
     def __init__(self):
@@ -48,16 +50,17 @@ class DiceLoss(nn.Module):
         return loss
 
 
-# refer to https://github.com/caogang/wgan-gp/blob/master/gan_mnist.py 
+# refer to https://github.com/caogang/wgan-gp/blob/master/gan_mnist.py
+
 
 def calc_gradient_penalty(D, x_real, x_fake, x1, x2):
-    #print real_data.size()
+    # print real_data.size()
 
-    x_real.requires_grad = True 
-    x_fake.requires_grad = True 
-    x1.requires_grad = True 
-    x2.requires_grad = True 
-    alpha = torch.rand(conf.batch_size, 1, 1, 1)
+    x_real.requires_grad = True
+    x_fake.requires_grad = True
+    x1.requires_grad = True
+    x2.requires_grad = True
+    alpha = torch.rand(x1.shape[0], 1, 1, 1)
     alpha = alpha.expand(x_real.size())
     alpha = alpha.to(conf.device)
 
@@ -65,15 +68,21 @@ def calc_gradient_penalty(D, x_real, x_fake, x1, x2):
 
     interpolates = interpolates.to(conf.device)
 
-    disc_interpolates = D(interpolates, x1, x2)[:3] # 最后一个是中间层feature，不需要
-    
+    disc_interpolates = D(interpolates, x1, x2)[:3]  # 最后一个是中间层feature，不需要
+
     # print(x_real.requires_grad, x_fake.requires_grad, x1.requires_grad, x2.requires_grad)
-    gradients = autograd.grad(outputs=disc_interpolates, inputs=[interpolates,x1,x2],
-                              grad_outputs=[torch.ones(disc_interpolates[0].size()).to(conf.device),
-                                            torch.ones(disc_interpolates[1].size()).to(conf.device),
-                                            torch.ones(disc_interpolates[2].size()).to(conf.device)
-                                            ],
-                              create_graph=True, retain_graph=True, only_inputs=True)[0]
+    gradients = autograd.grad(
+        outputs=disc_interpolates,
+        inputs=[interpolates, x1, x2],
+        grad_outputs=[
+            torch.ones(disc_interpolates[0].size()).to(conf.device),
+            torch.ones(disc_interpolates[1].size()).to(conf.device),
+            torch.ones(disc_interpolates[2].size()).to(conf.device),
+        ],
+        create_graph=True,
+        retain_graph=True,
+        only_inputs=True,
+    )[0]
 
     gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean()
     return gradient_penalty
@@ -164,7 +173,6 @@ class DiscriminationLoss(nn.Module):
         else:
             self.cls_criteron = nn.CrossEntropyLoss()
 
-
     def forward(
         self,
         out_real,
@@ -177,7 +185,11 @@ class DiscriminationLoss(nn.Module):
         fake_char_label,
         cls_enc_p=None,
         cls_enc_s=None,
-        D = None,x_real=None,x_fake=None, x1 = None, x2 = None
+        D=None,
+        x_real=None,
+        x_fake=None,
+        x1=None,
+        x2=None,
     ):
         self.real_loss = conf.alpha * nn.BCELoss()(
             out_real[0], real_label.float()
@@ -204,7 +216,9 @@ class DiscriminationLoss(nn.Module):
             cls_enc_s, real_style_label
         )
         if D:
-            self.gradient_penalty = conf.alpha_GP * calc_gradient_penalty(D,x_real, x_fake, x1, x2)
+            self.gradient_penalty = conf.alpha_GP * calc_gradient_penalty(
+                D, x_real, x_fake, x1, x2
+            )
         else:
             self.gradient_penalty = 0.0
 
@@ -216,6 +230,7 @@ class DiscriminationLoss(nn.Module):
             + self.real_char_category_loss
             + self.fake_char_category_loss
             + self.content_category_loss
-            + self.style_category_loss 
-            + self.gradient_penalty 
+            + self.style_category_loss
+            + self.gradient_penalty
         )
+
