@@ -136,12 +136,18 @@ class PreLoadData(Dataset):
 
 
 class CustomSampler(Sampler):
-    def __init__(self, data):
+    def __init__(self, data, shuffle=True):
         self.data = data
+        self.shuffle = shuffle
 
     def __iter__(self):
         indices = []
-        for n in range(conf.num_fonts):
+        if self.shuffle:
+            font_indices = random.shuffle([i for i in range(conf.num_fonts)])
+        else:
+            font_indices = [i for i in range(conf.num_fonts)]
+        # for n in range(conf.num_fonts):
+        for n in font_indices:
             index = torch.where(self.data.style_label == n)[0]
             indices.append(index)
         indices = torch.cat(indices, dim=0)

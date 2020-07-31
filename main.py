@@ -44,9 +44,9 @@ if __name__ == "__main__":
                 num_workers=conf.num_workers,
             )
         else:
-            train_sampler = CustomSampler(train_data)
+            train_sampler = CustomSampler(train_data, shuffle=True)
             train_batch_sampler = CustomBatchSampler(
-                train_sampler, conf.batch_size, False
+                train_sampler, conf.batch_size, drop_last=False
             )
             train_dl = DataLoaderX(
                 train_data, batch_sampler=train_batch_sampler
@@ -55,9 +55,7 @@ if __name__ == "__main__":
             eval_batch_sampler = CustomBatchSampler(
                 eval_sampler, conf.batch_size, False
             )
-            eval_dl = DataLoaderX(
-                eval_data, batch_sampler=eval_batch_sampler
-            )
+            eval_dl = DataLoaderX(eval_data, batch_sampler=eval_batch_sampler)
 
         trainer = Trainer(train_dl, eval_dl)
 
