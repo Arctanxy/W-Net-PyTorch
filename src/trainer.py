@@ -23,6 +23,7 @@ class Trainer(object):
         epoch_reconstruction_loss = 0.0
         epoch_lgs = 0.0
         epoch_lds = 0.0
+        cnt = 0
         for (
             protype_img,
             index,
@@ -31,12 +32,17 @@ class Trainer(object):
             style_character_index,
             real_img,
         ) in tqdm(self.train_loader, total=len(self.train_loader)):
+            if cnt == len(self.train_loader):
+                break
+            cnt += 1
             x1 = protype_img.to(conf.device)
             x2 = style_img.to(conf.device)
             x_real = real_img.to(conf.device)
             real_style_label = style_indices.to(conf.device)  # 真实的风格标签
             fake_style_label = torch.tensor(
-                [conf.num_fonts for i in range(x1.shape[0])] # drop_last = True的时候可以把用range(conf.batch_size)
+                [
+                    conf.num_fonts for i in range(x1.shape[0])
+                ]  # drop_last = True的时候可以把用range(conf.batch_size)
             ).to(
                 conf.device
             )  # 假的风格标签
@@ -104,7 +110,7 @@ class Trainer(object):
             cls_enc_s = self.CLSS(rout.view(-1, 512).detach())
 
             # 真假分类损失，风格分类损失，两个encoder提取到的特征质量损失
-            if conf.label_smoothing: 
+            if conf.label_smoothing:
                 L_D = DiscriminationLoss()(
                     out_real,
                     out_fake,
@@ -118,7 +124,9 @@ class Trainer(object):
                     cls_enc_s,
                     self.D,
                     x_real,
-                    x_fake.detach(),x1,x2
+                    x_fake.detach(),
+                    x1,
+                    x2,
                 )
             else:
                 L_D = DiscriminationLoss()(
@@ -264,6 +272,7 @@ class Trainer(object):
         with torch.no_grad():
             self.G.eval()
             losses = []
+            cnt = 0
             for (
                 protype_img,
                 index,
@@ -272,6 +281,9 @@ class Trainer(object):
                 style_character_index,
                 real_img,
             ) in tqdm(self.valid_loader, total=len(self.valid_loader)):
+                if cnt == len(self.valid_loader):
+                    break
+                cnt += 1
                 x1 = protype_img.to(conf.device)
                 x2 = style_img.to(conf.device)
                 x_real = real_img.to(conf.device)
