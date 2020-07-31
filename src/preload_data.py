@@ -142,10 +142,9 @@ class CustomSampler(Sampler):
 
     def __iter__(self):
         indices = []
+        font_indices = [i for i in range(conf.num_fonts)]
         if self.shuffle:
-            font_indices = random.shuffle([i for i in range(conf.num_fonts)])
-        else:
-            font_indices = [i for i in range(conf.num_fonts)]
+            random.shuffle(font_indices)
         # for n in range(conf.num_fonts):
         for n in font_indices:
             index = torch.where(self.data.style_label == n)[0]
