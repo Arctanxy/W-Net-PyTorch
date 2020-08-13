@@ -10,6 +10,7 @@ import os.path as osp
 import pandas as pd
 from PIL import Image
 import random
+import cv2
 import operator
 from functools import reduce
 import torch
@@ -55,7 +56,10 @@ class PreLoadData(Dataset):
         self.protype_imgs = [None for i in range(len(self.characters))]
         for i in range(len(self.characters)):
             if osp.exists(self.protype_paths[i]):
-                img = Image.open(self.protype_paths[i])
+                # img = Image.open(self.protype_paths[i])
+                img = cv2.imread(self.protype_paths[i])
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                img = Image.fromarray(img)
             else:
                 img = generate_img(self.characters[i], self.protype_font, 60)
             self.protype_imgs[i] = img
