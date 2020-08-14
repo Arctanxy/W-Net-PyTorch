@@ -44,9 +44,16 @@ class PreLoadData(Dataset):
         if subset == "train":
             self.fonts = self.fonts[: conf.num_fonts]  # 调试模型的时候只用一部分
         self.font_size = font_size
-        characters = pd.read_excel(osp.join(conf.folder, "res", "3500常用汉字.xls"))
-        self.characters = list(characters["hz"].values)
-        self.characters = self.characters[: conf.num_chars]  # 调试模型的时候只用一部分
+        if conf.custom_charset:
+            f = open(conf.custom_charset, "r")
+            c = f.read()
+            characters = c.split("\n")
+            conf.num_chars = len(characters)
+            self.characters = characters
+        else:
+            characters = pd.read_excel(osp.join(conf.folder, "res", "3500常用汉字.xls"))
+            self.characters = list(characters["hz"].values)
+            self.characters = self.characters[: conf.num_chars]  # 调试模型的时候只用一部分
 
         self.protype_font = osp.join(conf.folder, "fonts", "MSYHBD.TTF")  # 基准字体
         self.protype_paths = [
