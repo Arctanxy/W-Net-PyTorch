@@ -216,19 +216,15 @@ class Trainer(object):
                 self.CLSP.load_state_dict(params["CLSP"])
                 self.CLSS.load_state_dict(params["CLSS"])
                 print("D,CLSP,CLSS 加载成功...")
+                # 如果类别变化了，optimizer就算加载成功也会在step处报错
+                self.optimizer_G.load_state_dict(params["optimizer_G"])
+                self.optimizer_D.load_state_dict(params["optimizer_D"])
+                print("Optimizer D, G 加载成功")
+
             except Exception as e:
                 print("D,CLSP,CLSS 加载失败...")
-
-            try:
-                self.optimizer_G.load_state_dict(params["optimizer_G"])
-            except Exception as e:
                 print("optimizer G 加载失败 ...")
-
-            try:
-                self.optimizer_D.load_state_dict(params["optimizer_D"])
-            except Exception as e:
                 print("optimizer D 加载失败 ...")
-
         else:
             print("从头开始训练...")
         if conf.multi_gpus:
