@@ -148,7 +148,7 @@ class Trainer(object):
         epoch_lgs /= len(self.train_loader)
         epoch_lds /= len(self.train_loader)
         fake_image = torchvision.utils.make_grid(x_fake)
-        real_image = torchvision.utils.make_grid(real_img)
+        real_image = torchvision.utils.make_grid(x_real)
         src_image = torchvision.utils.make_grid(x1)
         self.writer.add_image("fake", fake_image, epoch)
         self.writer.add_image("real", real_image, epoch)
