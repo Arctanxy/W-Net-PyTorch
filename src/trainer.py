@@ -185,7 +185,7 @@ class Trainer(object):
 
         self.optimizer_G = optim.Adam(
             self.G.parameters(),
-            lr=conf.init_lr,
+            lr=conf.init_lr_G,
             betas=(conf.beta_1, conf.beta_2),
             weight_decay=conf.weight_decay,
         )
@@ -197,7 +197,7 @@ class Trainer(object):
                 self.CLSP.parameters(),
                 self.CLSS.parameters(),
             ),
-            lr=conf.init_lr,
+            lr=conf.init_lr_D,
             betas=(conf.beta_1, conf.beta_2),
             weight_decay=conf.weight_decay,
         )

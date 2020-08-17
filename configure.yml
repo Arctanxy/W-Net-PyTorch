@@ -17,19 +17,20 @@ phi_r: 5
 # 优化器参数
 beta_1: 0.5
 beta_2: 0.999
-init_lr: 0.001
+init_lr_G: 0.0001
+init_lr_D: 0.001
 weight_decay: 0.001
 
 # 训练参数
 num_epochs: 1000
 start_epoch: 0
-save_epoch: 10
+save_epoch: 5
 batch_size: 64 # 2 for debugging, 128 for training
 num_workers: 4
 multi_gpus: OFF
 device_ids: [0, 1]
 device_id: 0
-ckpt: NULL
+ckpt: /media/zjk/tmp/shared_scripts/W-Net-PyTorch/model_epoch_50_loss_0.3724613007571962.pth
 preload: ON # 把图片预加载到内存，提高速度
 img_folder: data # 图片暂存目录，提高图片加载速度
 
@@ -42,4 +43,4 @@ title: 53fonts_3500chars_l1 # 实验名称
 # tricks
 label_smoothing: ON
 custom_batch: ON  # 自定义batch， 风格分支中每个batch的风格相同， 目前只在preload_data做了修改
-custom_charset: OFF
+custom_charset: /media/zjk/tmp/shared_scripts/W-Net-PyTorch/articles/word_teng.txt
