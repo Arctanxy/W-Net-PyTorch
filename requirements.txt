@@ -4,6 +4,6 @@ tqdm==4.47.0
 numpy==1.18.1
 pandas==1.0.5
 torch==1.4.0
-Pillow==7.2.0
+Pillow==8.1.1
 PyYAML==5.3.1
 scikit_learn==0.23.1
